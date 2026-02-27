@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard | AP Officers Portal</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay">
+  <div class="loading-logo">🏛 AP Officers Portal – Admin</div>
+  <div class="loading-spinner"></div>
+  <div class="loading-message">Loading district summaries...</div>
+</div>
+
+<div class="app-wrapper">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🔐</div>
+      <div class="logo-text">
+        <h3>AP Officers Portal</h3>
+        <span>Admin Console</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-badge">
+        <div class="name">Administrator</div>
+        <div class="role">Super Admin | All Districts</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Overview</div>
+      <div class="nav-item active" onclick="showAdminSection('sec-overview')">
+        <span class="nav-icon">🏠</span> Dashboard
+      </div>
+      <div class="nav-section-title">Data Management</div>
+      <div class="nav-item" onclick="showAdminSection('sec-dataentry')">
+        <span class="nav-icon">📝</span> Data Entry
+      </div>
+      <div class="nav-item" onclick="showAdminSection('sec-viewdata')">
+        <span class="nav-icon">👁️</span> View All Data
+      </div>
+      <div class="nav-section-title">Analytics & Reports</div>
+      <div class="nav-item" onclick="showAdminSection('sec-analytics')">
+        <span class="nav-icon">📈</span> Analytics
+      </div>
+      <div class="nav-item" onclick="showAdminSection('sec-retirement')">
+        <span class="nav-icon">🎓</span> Retirement Reports
+      </div>
+      <div class="nav-item" onclick="showAdminSection('sec-eiReport')">
+        <span class="nav-icon">⭐</span> E&I Reports
+      </div>
+      <div class="nav-item" onclick="showAdminSection('sec-nativeReport')">
+        <span class="nav-icon">🏡</span> Native District Report
+      </div>
+      <div class="nav-section-title">Export</div>
+      <div class="nav-item" onclick="showAdminSection('sec-adminexport')">
+        <span class="nav-icon">⬇️</span> Export Data
+      </div>
+      <div class="nav-section-title">Help</div>
+      <div class="nav-item" onclick="showAdminSection('sec-admincontact')">
+        <span class="nav-icon">📞</span> Contact Us
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn btn-outline btn-sm" onclick="logout()">🚪 Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="top-header">
+      <h2 id="adminHeaderTitle">Admin Dashboard</h2>
+      <div class="header-actions">
+        <div class="date-badge" id="adminCurrentDate"></div>
+        <button class="btn btn-sm btn-outline" onclick="refreshAllData()">🔄 Refresh All</button>
+      </div>
+    </header>
+
+    <!-- ============ OVERVIEW SECTION ============ -->
+    <section class="page-section active" id="sec-overview">
+      <div class="page-header">
+        <div>
+          <h2>State-wide Progress Dashboard</h2>
+          <p>Real-time data entry progress across all 28 districts of Andhra Pradesh</p>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-row">
+        <div class="stat-card c1">
+          <span class="icon">🗺️</span>
+          <div class="val" id="ov-totalDist">28</div>
+          <div class="lbl">Total Districts</div>
+        </div>
+        <div class="stat-card c2">
+          <span class="icon">✅</span>
+          <div class="val" id="ov-completedDist">–</div>
+          <div class="lbl">Fully Completed</div>
+        </div>
+        <div class="stat-card c3">
+          <span class="icon">⏳</span>
+          <div class="val" id="ov-inProgressDist">–</div>
+          <div class="lbl">In Progress</div>
+        </div>
+        <div class="stat-card c4">
+          <span class="icon">📝</span>
+          <div class="lbl" id="ov-totalRecords" style="font-size:1.6rem; font-weight:700; color:var(--primary)">–</div>
+          <div class="lbl">Total Records Saved</div>
+        </div>
+        <div class="stat-card c5">
+          <span class="icon">⭐</span>
+          <div class="val" id="ov-eiCompleted">–</div>
+          <div class="lbl">E&I Completed</div>
+        </div>
+      </div>
+
+      <!-- Progress Chart Row -->
+      <div class="charts-grid" style="margin-bottom:28px;">
+        <div class="chart-card">
+          <h4>📊 State-wide Completion Overview</h4>
+          <div class="chart-wrapper"><canvas id="stateChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>🏆 Top Performing Districts</h4>
+          <div class="chart-wrapper"><canvas id="topDistChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- District Tiles -->
+      <div class="chart-card" style="margin-bottom:0">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+          <h4 style="margin-bottom:0; border-bottom:none; padding-bottom:0;">🗺️ District Progress Tiles</h4>
+          <div style="display:flex; gap:10px; font-size:0.75rem; color:var(--text-muted);">
+            <span>🔴 Not Started &nbsp; 🟡 Started &nbsp; 🔵 Partial &nbsp; 🟢 Complete</span>
+          </div>
+        </div>
+        <div class="district-tiles-grid" id="districtTilesGrid">
+          <div style="color:var(--text-muted); font-size:0.88rem;">Loading district data...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DATA ENTRY (ADMIN) SECTION ============ -->
+    <section class="page-section" id="sec-dataentry">
+      <div class="page-header">
+        <div>
+          <h2>Admin Data Entry</h2>
+          <p>Enter or edit data for any district</p>
+        </div>
+      </div>
+      <div class="admin-district-select-bar">
+        <label>Select District:</label>
+        <select class="filter-select" id="adminEntryDistrict" onchange="loadAdminEntry()">
+          <option value="">-- Select a District --</option>
+        </select>
+        <button class="btn btn-sm btn-outline" onclick="loadAdminEntry()">Load Data</button>
+      </div>
+      <!-- Table will be injected here -->
+      <div id="adminEntryTableArea"></div>
+    </section>
+
+    <!-- ============ VIEW ALL DATA SECTION ============ -->
+    <section class="page-section" id="sec-viewdata">
+      <div class="page-header">
+        <div>
+          <h2>View All Data</h2>
+          <p>View and search all officer records across districts</p>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <select class="filter-select" id="viewDistrict" onchange="loadViewData()">
+          <option value="">All Districts</option>
+        </select>
+        <select class="filter-select" id="viewDept">
+          <option value="">All Departments</option>
+        </select>
+        <input type="text" class="filter-input" id="viewSearch" placeholder="Search officer name..." oninput="filterViewTable()" />
+        <div class="export-bar" style="margin-left:auto;">
+          <button class="btn btn-sm btn-export-json" onclick="adminExportJSON()">⬇️ JSON</button>
+          <button class="btn btn-sm btn-export-csv" onclick="adminExportCSV()">📊 CSV</button>
+        </div>
+      </div>
+      <div class="table-container">
+        <div class="table-scroll-wrap">
+          <table class="report-table" id="viewDataTable">
+            <thead>
+              <tr>
+                <th>District</th><th>Department</th><th>Post</th><th>Officer Name</th>
+                <th>CFMS ID</th><th>Contact</th><th>From Date</th><th>Native</th>
+                <th>Reg/FAC</th><th>Eff.</th><th>Intg.</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="viewDataBody"><tr><td colspan="12" style="text-align:center;padding:30px;color:var(--text-muted)">Select a district or load all data</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ANALYTICS SECTION ============ -->
+    <section class="page-section" id="sec-analytics">
+      <div class="page-header">
+        <div>
+          <h2>Analytics & Insights</h2>
+          <p>Comprehensive data analysis across all districts</p>
+        </div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>📊 District-wise Completion (%)</h4>
+          <div class="chart-wrapper"><canvas id="distBarChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>⭐ Average Efficiency by District</h4>
+          <div class="chart-wrapper"><canvas id="effChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>🛡️ Average Integrity by District</h4>
+          <div class="chart-wrapper"><canvas id="intgChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>🔀 Regular vs FAC Distribution</h4>
+          <div class="chart-wrapper"><canvas id="regfacChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RETIREMENT REPORT ============ -->
+    <section class="page-section" id="sec-retirement">
+      <div class="page-header">
+        <div>
+          <h2>Retirement Reports</h2>
+          <p>Officers retiring this year, within 2 years, and within 5 years</p>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+          <span class="retire-badge retire-this">Retiring This Year</span>
+          <span class="retire-badge retire-2yr">Within 2 Years</span>
+          <span class="retire-badge retire-5yr">Within 5 Years</span>
+          <span class="retire-badge retire-safe">Safe (5+ Years)</span>
+        </div>
+        <p style="font-size:0.82rem; color:var(--text-muted);">Note: Retirement age calculated as 60 years from date of birth. DOB inferred from CFMS ID if available.</p>
+      </div>
+      <div class="table-container">
+        <div class="table-scroll-wrap">
+          <table class="report-table" id="retirementTable">
+            <thead>
+              <tr>
+                <th>District</th><th>Department</th><th>Post</th><th>Officer Name</th>
+                <th>CFMS ID</th><th>Contact</th><th>Working From</th><th>Est. DOB</th><th>Retirement Status</th>
+              </tr>
+            </thead>
+            <tbody id="retirementBody"><tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text-muted)">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ E&I REPORT ============ -->
+    <section class="page-section" id="sec-eiReport">
+      <div class="page-header">
+        <div>
+          <h2>Efficiency & Integrity Report</h2>
+          <p>Performance ratings of all officers across districts</p>
+        </div>
+      </div>
+      <div class="charts-grid" style="margin-bottom:24px;">
+        <div class="chart-card">
+          <h4>📊 Score Distribution (Efficiency)</h4>
+          <div class="chart-wrapper"><canvas id="effDistChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>📊 Score Distribution (Integrity)</h4>
+          <div class="chart-wrapper"><canvas id="intgDistChart"></canvas></div>
+        </div>
+      </div>
+      <div class="table-container">
+        <div class="table-scroll-wrap">
+          <table class="report-table" id="eiTable">
+            <thead>
+              <tr>
+                <th>District</th><th>Department</th><th>Post</th><th>Officer Name</th>
+                <th>Efficiency</th><th>Integrity</th><th>Avg Score</th><th>Rating</th>
+              </tr>
+            </thead>
+            <tbody id="eiBody"><tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-muted)">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NATIVE DISTRICT REPORT ============ -->
+    <section class="page-section" id="sec-nativeReport">
+      <div class="page-header">
+        <div>
+          <h2>Native District Report</h2>
+          <p>Officers working in their home districts vs outside</p>
+        </div>
+      </div>
+      <div class="charts-grid" style="margin-bottom:24px;">
+        <div class="chart-card">
+          <h4>🏡 Native vs Non-native Officers</h4>
+          <div class="chart-wrapper"><canvas id="nativeChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>📊 Native Officers by District</h4>
+          <div class="chart-wrapper"><canvas id="nativeDistChart"></canvas></div>
+        </div>
+      </div>
+      <div class="table-container">
+        <div class="table-scroll-wrap">
+          <table class="report-table" id="nativeTable">
+            <thead>
+              <tr>
+                <th>District</th><th>Post</th><th>Officer Name</th><th>Posting District</th><th>Native District</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="nativeBody"><tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted)">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXPORT (ADMIN) ============ -->
+    <section class="page-section" id="sec-adminexport">
+      <div class="page-header">
+        <div><h2>Export Data</h2><p>Download all district data in various formats</p></div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px;">
+        <div class="chart-card">
+          <h4>📄 Export All as JSON</h4>
+          <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:16px;">All districts' data combined into single JSON file.</p>
+          <button class="btn btn-export-json" onclick="adminExportJSON()">⬇️ Download JSON</button>
+        </div>
+        <div class="chart-card">
+          <h4>📊 Export All as CSV</h4>
+          <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:16px;">All districts' data in a single CSV file for Excel analysis.</p>
+          <button class="btn btn-export-csv" onclick="adminExportCSV()">⬇️ Download CSV</button>
+        </div>
+        <div class="chart-card">
+          <h4>🗺️ Export by District</h4>
+          <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:16px;">Download data for a specific district.</p>
+          <select class="filter-select" id="exportDistrictSelect" style="width:100%; margin-bottom:12px;">
+            <option value="">-- Select District --</option>
+          </select>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-sm btn-export-json" onclick="exportDistrictJSON()">JSON</button>
+            <button class="btn btn-sm btn-export-csv" onclick="exportDistrictCSV()">CSV</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT (ADMIN) ============ -->
+    <section class="page-section" id="sec-admincontact">
+      <div class="page-header">
+        <div><h2>Contact Us</h2><p>Support team contacts</p></div>
+      </div>
+      <div class="contacts-grid">
+        <div class="contact-card">
+          <div class="contact-avatar">👨‍💼</div>
+          <h3>D Srinivasan</h3>
+          <p class="designation">OSD to Special Chief Secretary<br>to Hon'ble Chief Minister</p>
+          <div class="contact-no">📞 123456</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">👨‍💼</div>
+          <h3>Kranthi Kumar</h3>
+          <p class="designation">PS to Special Chief Secretary<br>to Hon'ble Chief Minister</p>
+          <div class="contact-no">📞 456789</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">👨‍💼</div>
+          <h3>Wilson</h3>
+          <p class="designation">PA to Special Chief Secretary<br>to Hon'ble Chief Minister</p>
+          <div class="contact-no">📞 8795565</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="data.js"></script>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+<script src="analytics.js"></script>
+</body>
+</html>

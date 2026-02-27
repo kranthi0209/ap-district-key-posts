@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>District Dashboard | AP Officers Portal</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay">
+  <div class="loading-logo">🏛 AP District Key Officers Portal</div>
+  <div class="loading-spinner"></div>
+  <div class="loading-message">Loading data from Database...</div>
+</div>
+
+<div class="app-wrapper">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🏛</div>
+      <div class="logo-text">
+        <h3>AP District Key Officers Portal</h3>
+        <span>Govt. of Andhra Pradesh</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-badge">
+        <div class="name" id="sidebarDistrictName">–</div>
+        <div class="role">District Collector Login</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Main Menu</div>
+      <div class="nav-item active" onclick="showSection('sec-entry')">
+        <span class="nav-icon">📝</span> Data Entry
+      </div>
+      <div class="nav-item" onclick="showSection('sec-progress')">
+        <span class="nav-icon">📊</span> Progress Dashboard
+      </div>
+      <div class="nav-section-title">Reports</div>
+      <div class="nav-item" onclick="showSection('sec-deptprogress')">
+        <span class="nav-icon">🏢</span> Dept-wise Progress
+      </div>
+      <div class="nav-item" onclick="showSection('sec-export')">
+        <span class="nav-icon">⬇️</span> Export Data
+      </div>
+      <div class="nav-section-title">Help</div>
+      <div class="nav-item" onclick="showSection('sec-contact')">
+        <span class="nav-icon">📞</span> Contact Us
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn btn-outline btn-sm" onclick="logout()">🚪 Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="top-header">
+      <h2 id="headerTitle">Data Entry</h2>
+      <div class="header-actions">
+        <div class="date-badge" id="currentDate"></div>
+        <div style="font-size:0.82rem; color:var(--text-muted);" id="headerUser"></div>
+      </div>
+    </header>
+
+    <!-- ============ DATA ENTRY SECTION ============ -->
+    <section class="page-section active" id="sec-entry">
+
+      <!-- Progress Header -->
+      <div class="progress-header-card" id="progressHeader">
+        <div class="district-name" id="progressDistrictTitle">Loading...</div>
+        <div class="progress-grid">
+          <div class="progress-stat stat-total">
+            <div class="value" id="statTotal">–</div>
+            <div class="label">Total Posts</div>
+          </div>
+          <div class="progress-stat stat-saved">
+            <div class="value" id="statSaved">–</div>
+            <div class="label">General Data Saved</div>
+          </div>
+          <div class="progress-stat stat-pending">
+            <div class="value" id="statPending">–</div>
+            <div class="label">Pending</div>
+          </div>
+          <div class="progress-stat stat-ei">
+            <div class="value" id="statEI">–</div>
+            <div class="label">Ratings Data Saved</div>
+          </div>
+        </div>
+        <div class="progress-bars">
+          <div class="progress-bar-row">
+            <div class="label">General Data Progress</div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill general" id="barGeneral" style="width:0%"></div>
+            </div>
+            <div class="pct" id="pctGeneral">0%</div>
+          </div>
+          <div class="progress-bar-row">
+            <div class="label">Efficiency & Integrity Progress</div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill ei" id="barEI" style="width:0%"></div>
+            </div>
+            <div class="pct" id="pctEI">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Entry Table -->
+      <div class="table-container">
+        <div class="table-toolbar">
+          <h3>📋 Officers Data Entry</h3>
+          <div class="toolbar-right">
+            <div class="export-bar">
+              
+              <button class="btn btn-sm btn-export-csv" onclick="exportCSV()">📊 Export CSV</button>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="loadData()">🔄 Refresh</button>
+          </div>
+        </div>
+        <div class="table-scroll-wrap">
+          <table class="data-table" id="dataTable">
+            <thead>
+              <tr>
+                <th>Sl No</th>
+                <th>Department</th>
+                <th>Name of the Post</th>
+                <th>Name of Officer</th>
+                <th>CFMS ID</th>
+                <th>Contact No</th>
+                <th>Working From Date</th>
+                <th>Native District</th>
+                <th>Regular/FAC</th>
+                <th>Efficiency (1-10)</th>
+                <th>Integrity (1-10)</th>
+                <th>Status</th>
+                <th style="min-width:200px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dataTableBody">
+              <tr><td colspan="13" style="text-align:center; padding:40px; color:var(--text-muted);">Loading data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROGRESS SECTION ============ -->
+    <section class="page-section" id="sec-progress">
+      <div class="page-header">
+        <div>
+          <h2>Progress Dashboard</h2>
+          <p>Overview of data entry completion for your district</p>
+        </div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>📊 Overall Completion</h4>
+          <div class="chart-wrapper"><canvas id="doughnutChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>🏢 Department-wise Status</h4>
+          <div class="chart-wrapper"><canvas id="deptBarChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DEPT PROGRESS SECTION ============ -->
+    <section class="page-section" id="sec-deptprogress">
+      <div class="page-header">
+        <div>
+          <h2>Department-wise Progress</h2>
+          <p>Track data entry status across all departments</p>
+        </div>
+      </div>
+      <div class="dept-progress-grid" id="deptProgressGrid">
+        <p style="color:var(--text-muted)">Loading...</p>
+      </div>
+    </section>
+
+    <!-- ============ EXPORT SECTION ============ -->
+    <section class="page-section" id="sec-export">
+      <div class="page-header">
+        <div>
+          <h2>Export Data</h2>
+          <p>Download your district's data in various formats</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:20px; flex-wrap:wrap;">
+        
+        <div class="chart-card" style="flex:1; min-width:260px;">
+          <h4>📊 Export as CSV</h4>
+          <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:20px;">Download all records in CSV format for Excel or Spreadsheet use.</p>
+          <button class="btn btn-export-csv" onclick="exportCSV()">⬇️ Download CSV</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT SECTION ============ -->
+    <section class="page-section" id="sec-contact">
+      <div class="page-header">
+        <div>
+          <h2>Contact Us</h2>
+          <p>Reach out to our support team for assistance</p>
+        </div>
+      </div>
+      <div class="contacts-grid">
+        <div class="contact-card">
+          <div class="contact-avatar">👨‍💼</div>
+          <h3>D Srinivasan</h3>
+          <p class="designation">OSD to Special Chief Secretary<br>to Hon'ble Chief Minister</p>
+          <div class="contact-no">📞 123456</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">👨‍💼</div>
+          <h3>Kranthi Kumar</h3>
+          <p class="designation">PS to Special Chief Secretary<br>to Hon'ble Chief Minister</p>
+          <div class="contact-no">📞 456789</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">👨‍💼</div>
+          <h3>Wilson</h3>
+          <p class="designation">PA to Special Chief Secretary<br>to Hon'ble Chief Minister</p>
+          <div class="contact-no">📞 8795565</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="data.js"></script>
+<script src="auth.js"></script>
+<script src="district.js"></script>
+</body>
+</html>

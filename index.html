@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AP Officers Portal – Login | Government of Andhra Pradesh</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay">
+  <div class="loading-logo">🏛 AP Officers Portal</div>
+  <div class="loading-spinner"></div>
+  <div class="loading-message">Please wait...</div>
+</div>
+
+<!-- Login Page -->
+<div class="login-page">
+  <div class="login-left">
+    <div class="login-emblem">🏛</div>
+    <h1>Government of<br>Andhra Pradesh</h1>
+    <p>District Key Officers Data Collection Portal</p>
+    <div class="tagline">
+      Secure digital portal for District-wise Key Government Officials Records Management
+    </div>
+    <div style="margin-top: 40px; color: rgba(255,255,255,0.4); font-size: 0.75rem; position:relative; z-index:1;">
+      Confidential | Authorised Personnel Only
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="login-card">
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Sign in with your District credentials to continue</p>
+
+      <div class="form-group">
+        <label>User ID</label>
+        <input type="text" id="loginUserId" class="form-control" placeholder="Enter your User ID" autocomplete="off" />
+        <div class="error-msg" id="userIdError">Please enter your User ID</div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div style="position:relative">
+          <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" />
+          <button onclick="togglePassword()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text-muted);" id="eyeBtn">👁</button>
+        </div>
+        <div class="error-msg" id="passwordError">Please enter your password</div>
+      </div>
+
+      <div class="error-msg show" id="loginError" style="display:none; margin-bottom:16px; font-size:0.88rem; padding:10px 14px; background:rgba(231,76,60,0.08); border-radius:6px; border-left:3px solid var(--danger);"></div>
+
+      <button class="btn btn-primary" onclick="doLogin()">
+        <span>🔐</span> Sign In Securely
+      </button>
+
+      <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); text-align:center;">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="data.js"></script>
+<script src="auth.js"></script>
+<script>
+  function togglePassword() {
+    const pwd = document.getElementById('loginPassword');
+    const btn = document.getElementById('eyeBtn');
+    if (pwd.type === 'password') { pwd.type = 'text'; btn.textContent = '🙈'; }
+    else { pwd.type = 'password'; btn.textContent = '👁'; }
+  }
+
+  function showContactPage() {
+    window.location.href = 'contact.html';
+  }
+
+  // Enter key support
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+</script>
+</body>
+</html>
