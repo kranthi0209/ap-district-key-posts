@@ -66,7 +66,7 @@ function showSection(id) {
 // LOAD DATA FROM GOOGLE SHEETS
 // ============================================================
 async function loadData() {
-  showLoadingPopup('Loading data from Google Sheets...');
+  showLoadingPopup('Loading data from Database...');
   try {
     const result = await getSheetData(currentUser.user_id);
     rowData = {};
@@ -76,7 +76,7 @@ async function loadData() {
       });
     }
   } catch (e) {
-    console.warn('Could not load from Google Sheets, working offline:', e);
+    console.warn('Could not load from Database, working offline:', e);
   }
   hideLoadingPopup();
   renderTable();
@@ -111,7 +111,7 @@ function renderTable() {
     if (isFullySaved) statusBadge = '<span class="row-status-badge badge-full">✅ Fully Complete</span>';
     else if (isNoPost) statusBadge = '<span class="row-status-badge badge-nopost">🚫 No Such Post</span>';
     else if (isVacant) statusBadge = '<span class="row-status-badge badge-vacant">⭕ Vacant</span>';
-    else if (isGeneralSaved) statusBadge = '<span class="row-status-badge badge-partial">⏳ Ratings Data Pending</span>';
+    else if (isGeneralSaved) statusBadge = '<span class="row-status-badge badge-partial">⏳ Efficieny & Integrity Data Pending</span>';
     else statusBadge = '<span class="row-status-badge badge-pending">📝 Pending</span>';
 
     tr.innerHTML = `
@@ -197,14 +197,14 @@ function renderTable() {
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
             ${!isGeneralSaved
               ? `<button id="saveGen-${post.post_id}" class="btn btn-sm btn-success" onclick="saveGeneral('${post.post_id}')" disabled>💾 Save General Data</button>`
-              : `<button class="btn btn-sm btn-warning" onclick="editGeneral('${post.post_id}')">✏️ Edit</button>`
+              : `<button class="btn btn-sm btn-warning" onclick="editGeneral('${post.post_id}')">✏️ Edit General Data </button>`
             }
           </div>
           <!-- E&I Save/Edit -->
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
             ${!isEISaved
-              ? `<button id="saveEI-${post.post_id}" class="btn btn-sm btn-success" onclick="saveEI('${post.post_id}')" ${isGeneralSaved || isVacant || isNoPost ? '' : 'disabled'} style="background:var(--accent3)">💾 Save Ratings Data</button>`
-              : `<button class="btn btn-sm btn-warning" onclick="editEI('${post.post_id}')">✏️ Edit Ratings</button>`
+              ? `<button id="saveEI-${post.post_id}" class="btn btn-sm btn-success" onclick="saveEI('${post.post_id}')" ${isGeneralSaved ? '' : 'disabled'} style="background:var(--accent3)">💾 Save Efficiency & Integrity Data</button>`
+              : `<button class="btn btn-sm btn-warning" onclick="editEI('${post.post_id}')">✏️ Edit Efficiency & Integrity Data </button>`
             }
           </div>
         </div>
@@ -354,7 +354,7 @@ async function saveGeneral(postId) {
     };
   }
 
-  showLoadingPopup('Saving to Google Sheets...');
+  showLoadingPopup('Saving to Database...');
   try {
     await saveRowToSheet(currentUser.user_id, payload);
     rowData[postId] = payload;
@@ -371,6 +371,8 @@ async function saveGeneral(postId) {
 // SAVE E&I DATA
 // ============================================================
 async function saveEI(postId) {
+
+ 
   const eff = parseInt(document.getElementById(`eff-${postId}`)?.value);
   const intg = parseInt(document.getElementById(`intg-${postId}`)?.value);
 
@@ -388,13 +390,13 @@ async function saveEI(postId) {
     saved_at: new Date().toISOString()
   };
 
-  showLoadingPopup('Saving Ratings data...');
+  showLoadingPopup('Saving Efficiency & Integrity data...');
   try {
     await saveRowToSheet(currentUser.user_id, payload);
     rowData[postId] = payload;
     showToast('Efficiency & Integrity data saved!', 'success');
   } catch (e) {
-    showToast('Error saving Ratings data. Please try again.', 'error');
+    showToast('Error saving Efficiency & Integrity data. Please try again.', 'error');
   }
   hideLoadingPopup();
   renderTable();
@@ -465,10 +467,10 @@ function renderProgressCharts() {
   doughnutChart = new Chart(dCtx, {
     type: 'doughnut',
     data: {
-      labels: ['General Saved', ' Saved', 'Pending'],
+      labels: ['Completed', 'Pending'],
       datasets: [{
-        data: [genSaved, eiSaved, total - genSaved],
-        backgroundColor: ['#27ae60', '#16a085', '#e74c3c'],
+        data: [genSaved, total - genSaved],
+        backgroundColor: ['#27ae60', '#e74c3c'],
         borderWidth: 0
       }]
     },
