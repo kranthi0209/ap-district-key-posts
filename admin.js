@@ -323,7 +323,7 @@ function renderAdminEntryTable(districtId) {
         <td>${saved.cfms_id || '–'}</td>
         <td>${saved.contact_no || '–'}</td>
         <td>${saved.from_date || '–'}</td>
-        <td>${saved.native_dist ? (DISTRICTS_DATA.find(d=>d.district_id===saved.native_dist)?.district_name || saved.native_dist) : '–'}</td>
+        <td>${saved.native_dist ? (saved.native_dist === 'OTHER_STATE' ? 'Other State' : (DISTRICTS_DATA.find(d=>d.district_id===saved.native_dist)?.district_name || saved.native_dist)) : '–'}</td>
         <td>${saved.reg_fac || '–'}</td>
         <td>${saved.efficiency || '–'}</td>
         <td>${saved.integrity || '–'}</td>
@@ -375,6 +375,7 @@ function adminEditRow(districtId, userId, postId) {
           <select class="form-control" id="ae-native">
             <option value="">Select...</option>
             ${DISTRICTS_DATA.map(d=>`<option value="${d.district_id}" ${existing.native_dist===d.district_id?'selected':''}>${d.district_name}</option>`).join('')}
+            <option value="OTHER_STATE" ${existing.native_dist==='OTHER_STATE'?'selected':''}>Other State</option>
           </select>
         </div>
         <div class="form-group">
@@ -523,7 +524,7 @@ function filterViewTable() {
   }
 
   tbody.innerHTML = rows.map(({ dist, post, r }) => {
-    const nativeName = r.native_dist ? (DISTRICTS_DATA.find(d => d.district_id === r.native_dist)?.district_name || r.native_dist) : '–';
+    const nativeName = r.native_dist ? (r.native_dist === 'OTHER_STATE' ? 'Other State' : (DISTRICTS_DATA.find(d => d.district_id === r.native_dist)?.district_name || r.native_dist)) : '–';
     const status = r.ei_saved === 'true' && r.general_saved === 'true' ? '<span class="row-status-badge badge-full">✅ Full</span>' :
       r.general_saved === 'true' ? '<span class="row-status-badge badge-partial">⏳ E&I</span>' :
       r.is_vacant === 'true' ? '<span class="row-status-badge badge-vacant">⭕ Vacant</span>' :

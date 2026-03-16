@@ -158,6 +158,7 @@ function renderTable() {
           onchange="onFieldChange('${post.post_id}')">
           <option value="">Select...</option>
           ${DISTRICTS_DATA.map(d => `<option value="${d.district_id}" ${saved.native_dist === d.district_id ? 'selected' : ''}>${d.district_name}</option>`).join('')}
+          <option value="OTHER_STATE" ${saved.native_dist === 'OTHER_STATE' ? 'selected' : ''}>Other State</option>
         </select>
       </td>
 

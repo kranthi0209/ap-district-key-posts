@@ -183,7 +183,7 @@ function renderNativeReport() {
       const isNative = r.native_dist === dist.district_id;
       if (isNative) { nativeCount++; nativeByDist[dist.district_name] = (nativeByDist[dist.district_name] || 0) + 1; }
       else nonNativeCount++;
-      const nativeName = r.native_dist ? (DISTRICTS_DATA.find(d => d.district_id === r.native_dist)?.district_name || r.native_dist) : '–';
+      const nativeName = r.native_dist ? (r.native_dist === 'OTHER_STATE' ? 'Other State' : (DISTRICTS_DATA.find(d => d.district_id === r.native_dist)?.district_name || r.native_dist)) : '–';
       rows.push({ dist, post, r, isNative, nativeName });
     });
   });
