@@ -6,6 +6,7 @@
   <title>Admin Dashboard | AP Officers Portal</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -75,57 +76,98 @@
       <h2 id="adminHeaderTitle">Admin Dashboard</h2>
       <div class="header-actions">
         <div class="date-badge" id="adminCurrentDate"></div>
-        <button class="btn btn-sm btn-outline" onclick="refreshAllData()">🔄 Refresh All</button>
+        <button class="btn btn-sm btn-outline" onclick="clearAdminCache();allDistrictData={};deAllRows=null;refreshAllData()">🔄 Refresh All</button>
       </div>
     </header>
 
     <!-- ============ OVERVIEW SECTION ============ -->
     <section class="page-section active" id="sec-overview">
-      <div class="page-header">
-        <div>
-          <h2>State-wide Progress Dashboard</h2>
-          <p>Real-time data entry progress across all 28 districts of Andhra Pradesh</p>
+
+      <!-- Hero Banner -->
+      <div class="ov-hero-banner">
+        <div class="ov-hero-info">
+          <div class="ov-hero-title">State-wide Progress Dashboard</div>
+          <div class="ov-hero-sub">Andhra Pradesh &nbsp;|&nbsp; All 28 Districts &nbsp;|&nbsp; Real-time Data Entry Tracking</div>
+          <div class="ov-hero-chips">
+            <span class="ov-chip green"  id="ov-chipCompleted">– Completed</span>
+            <span class="ov-chip orange" id="ov-chipProgress">– In Progress</span>
+            <span class="ov-chip red"    id="ov-chipNotStarted">– Not Started</span>
+          </div>
+        </div>
+        <div class="ov-hero-ring">
+          <canvas id="overallRingChart"></canvas>
+          <div class="ov-ring-overlay">
+            <div class="ov-ring-pct" id="ov-overallPct">0%</div>
+            <div class="ov-ring-lbl">Overall</div>
+          </div>
+        </div>
+        <div class="ov-hero-metrics">
+          <div class="ov-metric">
+            <div class="ov-metric-val" id="ov-totalPostsM">–</div>
+            <div class="ov-metric-lbl">Total Posts</div>
+          </div>
+          <div class="ov-metric">
+            <div class="ov-metric-val" id="ov-genSavedM">–</div>
+            <div class="ov-metric-lbl">General Data Saved</div>
+          </div>
+          <div class="ov-metric">
+            <div class="ov-metric-val" id="ov-eiSavedM">–</div>
+            <div class="ov-metric-lbl">Ratings Data Saved</div>
+          </div>
+          <div class="ov-metric">
+            <div class="ov-metric-val" id="ov-eiPctM">–</div>
+            <div class="ov-metric-lbl">E&amp;I Coverage %</div>
+          </div>
         </div>
       </div>
 
-      <!-- Stats Row -->
-      <div class="stats-row">
-        <div class="stat-card c1">
-          <span class="icon">🗺️</span>
-          <div class="val" id="ov-totalDist">28</div>
-          <div class="lbl">Total Districts</div>
+      <!-- Stats Row – 6 gradient cards -->
+      <div class="stats-row ov-stats-6">
+        <div class="stat-card ov-c1">
+          <span class="sc-icon-wrap">🗺️</span>
+          <div class="sc-val" id="ov-totalDist">28</div>
+          <div class="sc-lbl">Total Districts</div>
         </div>
-        <div class="stat-card c2">
-          <span class="icon">✅</span>
-          <div class="val" id="ov-completedDist">–</div>
-          <div class="lbl">Fully Completed</div>
+        <div class="stat-card ov-c2">
+          <span class="sc-icon-wrap">✅</span>
+          <div class="sc-val" id="ov-completedDist">–</div>
+          <div class="sc-lbl">Fully Completed</div>
         </div>
-        <div class="stat-card c3">
-          <span class="icon">⏳</span>
-          <div class="val" id="ov-inProgressDist">–</div>
-          <div class="lbl">In Progress</div>
+        <div class="stat-card ov-c3">
+          <span class="sc-icon-wrap">⏳</span>
+          <div class="sc-val" id="ov-inProgressDist">–</div>
+          <div class="sc-lbl">In Progress</div>
         </div>
-        <div class="stat-card c4">
-          <span class="icon">📝</span>
-          <div class="lbl" id="ov-totalRecords" style="font-size:1.6rem; font-weight:700; color:var(--primary)">–</div>
-          <div class="lbl">Total Records Saved</div>
+        <div class="stat-card ov-c4">
+          <span class="sc-icon-wrap">🔴</span>
+          <div class="sc-val" id="ov-notStartedDist">–</div>
+          <div class="sc-lbl">Not Started</div>
         </div>
-        <div class="stat-card c5">
-          <span class="icon">⭐</span>
-          <div class="val" id="ov-eiCompleted">–</div>
-          <div class="lbl">Efficiency & Integrity Data Completed</div>
+        <div class="stat-card ov-c5">
+          <span class="sc-icon-wrap">📝</span>
+          <div class="sc-val" id="ov-totalRecords">–</div>
+          <div class="sc-lbl">Total Records Saved</div>
+        </div>
+        <div class="stat-card ov-c6">
+          <span class="sc-icon-wrap">⭐</span>
+          <div class="sc-val" id="ov-eiCompleted">–</div>
+          <div class="sc-lbl">E&amp;I Data Completed</div>
         </div>
       </div>
 
-      <!-- Progress Chart Row -->
-      <div class="charts-grid" style="margin-bottom:28px;">
+      <!-- Charts Row 1 – 3 columns -->
+      <div class="charts-grid charts-3col" style="margin-bottom:24px;">
         <div class="chart-card">
-          <h4>📊 State-wide Completion Overview</h4>
+          <h4>📊 State Completion Overview</h4>
           <div class="chart-wrapper"><canvas id="stateChart"></canvas></div>
         </div>
         <div class="chart-card">
-          <h4>🏆 Top Performing Districts</h4>
+          <h4>🏆 All Districts – General vs Ratings</h4>
           <div class="chart-wrapper"><canvas id="topDistChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>📈 Completion Milestone Breakdown</h4>
+          <div class="chart-wrapper"><canvas id="milestoneChart"></canvas></div>
         </div>
       </div>
 
@@ -141,25 +183,198 @@
           <div style="color:var(--text-muted); font-size:0.88rem;">Loading district data...</div>
         </div>
       </div>
+
+      <!-- District Progress Report Table -->
+      <div class="chart-card dpr-card" style="margin-top:24px;">
+        <!-- Action bar (not captured in export) -->
+        <div class="dpr-actions">
+          <span style="font-size:0.8rem; color:var(--text-muted);">Export Report:</span>
+          <button class="btn btn-sm" onclick="downloadProgressReportPDF()">📄 Download PDF</button>
+          <button class="btn btn-sm btn-outline" onclick="downloadProgressReportJPEG()">🖼️ Download JPEG</button>
+        </div>
+
+        <!-- Capturable / Printable Report -->
+        <div id="districtProgressReport" class="dpr-wrapper">
+          <div class="dpr-center">
+            <div class="dpr-header">
+              <div class="dpr-title">District Key Posts Incumbants Data Entry Status Report</div>
+              <div class="dpr-as-on">As on <span id="dprAsOnDate">—</span></div>
+            </div>
+            <table class="district-progress-report" id="districtProgressTable">
+              <thead>
+                <tr>
+                  <th rowspan="2">Sl No</th>
+                  <th rowspan="2">Name of the District</th>
+                  <th colspan="3">Progress of Data Entry</th>
+                  <th colspan="2">Final Status</th>
+                </tr>
+                <tr>
+                  <th>No of Posts</th>
+                  <th>General Data Saved</th>
+                  <th>Ratings Data Saved</th>
+                  <th>General Data</th>
+                  <th>Ratings Data</th>
+                </tr>
+              </thead>
+              <tbody id="districtProgressTableBody">
+                <tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Loading...</td></tr>
+              </tbody>
+            </table>
+            <div class="dpr-footer">
+              <span>Andhra Pradesh Districts Key Officers Portal</span>
+              <span>Admin Report</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ============ DATA ENTRY (ADMIN) SECTION ============ -->
     <section class="page-section" id="sec-dataentry">
-      <div class="page-header">
+      <div class="page-header" style="margin-bottom:0">
         <div>
           <h2>Admin Data Entry</h2>
-          <p>Enter or edit data for any district</p>
+          <p>All districts · All posts · Real-time filters</p>
+        </div>
+        <button class="btn btn-sm btn-outline" onclick="initDataEntryPage(true)">🔄 Reload All Data</button>
+      </div>
+
+      <!-- Stats Strip -->
+      <div class="de-stats-strip" id="deStatsStrip">
+        <div class="de-stat-pill"><div class="de-stat-val" id="deStat-total">–</div><div class="de-stat-lbl">Total Posts</div></div>
+        <div class="de-stat-pill de-sp-blue"><div class="de-stat-val" id="deStat-showing">–</div><div class="de-stat-lbl">Showing</div></div>
+        <div class="de-stat-pill de-sp-green"><div class="de-stat-val" id="deStat-complete">–</div><div class="de-stat-lbl">Fully Complete</div></div>
+        <div class="de-stat-pill de-sp-orange"><div class="de-stat-val" id="deStat-partial">–</div><div class="de-stat-lbl">Gen Only</div></div>
+        <div class="de-stat-pill de-sp-red"><div class="de-stat-val" id="deStat-pending">–</div><div class="de-stat-lbl">Not Started</div></div>
+        <div class="de-stat-pill de-sp-gray"><div class="de-stat-val" id="deStat-vacnopost">–</div><div class="de-stat-lbl">Vacant / No Post</div></div>
+      </div>
+
+      <!-- Filter Panel -->
+      <div class="de-filter-panel">
+        <div class="de-fp-header">
+          <span class="de-fp-title">🔍 Filters</span>
+          <button class="btn btn-xs btn-outline" onclick="resetDataEntryFilters()">✕ Reset Filters</button>
+        </div>
+
+        <!-- Row 1: Dropdowns + text search -->
+        <div class="de-filter-row">
+          <div class="de-fg">
+            <label class="de-fg-label">District</label>
+            <select class="filter-select" id="deDistrict" onchange="applyDataEntryFilters()">
+              <option value="">All Districts</option>
+            </select>
+          </div>
+          <div class="de-fg">
+            <label class="de-fg-label">Department</label>
+            <select class="filter-select" id="deDept" onchange="applyDataEntryFilters()">
+              <option value="">All Departments</option>
+            </select>
+          </div>
+          <div class="de-fg de-fg-grow">
+            <label class="de-fg-label">Post Name</label>
+            <input type="text" class="filter-input" id="dePostSearch" placeholder="Search post…" oninput="applyDataEntryFilters()" />
+          </div>
+          <div class="de-fg de-fg-grow">
+            <label class="de-fg-label">Officer Name</label>
+            <input type="text" class="filter-input" id="deOfficerSearch" placeholder="Search officer…" oninput="applyDataEntryFilters()" />
+          </div>
+          <div class="de-fg">
+            <label class="de-fg-label">Reg / FAC</label>
+            <select class="filter-select" id="deRegFac" onchange="applyDataEntryFilters()">
+              <option value="">All</option>
+              <option value="Regular">Regular</option>
+              <option value="FAC">FAC</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Row 2: Toggle groups -->
+        <div class="de-filter-row">
+          <div class="de-fg de-fg-auto">
+            <label class="de-fg-label">Post Status</label>
+            <div class="de-tog-grp" id="dePostStatusGroup">
+              <button class="de-tog active" data-val="" onclick="setDeTog('dePostStatusGroup',this)">All</button>
+              <button class="de-tog" data-val="active" onclick="setDeTog('dePostStatusGroup',this)">Active</button>
+              <button class="de-tog" data-val="vacant" onclick="setDeTog('dePostStatusGroup',this)">Vacant</button>
+              <button class="de-tog" data-val="nopost" onclick="setDeTog('dePostStatusGroup',this)">No Such Post</button>
+            </div>
+          </div>
+          <div class="de-fg de-fg-auto">
+            <label class="de-fg-label">Data Entry Status</label>
+            <div class="de-tog-grp" id="deEntryStatusGroup">
+              <button class="de-tog active" data-val="" onclick="setDeTog('deEntryStatusGroup',this)">All</button>
+              <button class="de-tog" data-val="complete" onclick="setDeTog('deEntryStatusGroup',this)">Complete</button>
+              <button class="de-tog" data-val="partial" onclick="setDeTog('deEntryStatusGroup',this)">Gen Only</button>
+              <button class="de-tog" data-val="pending" onclick="setDeTog('deEntryStatusGroup',this)">Not Started</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Range Sliders -->
+        <div class="de-filter-row">
+          <div class="de-fg de-fg-slider">
+            <label class="de-fg-label">Efficiency &nbsp;<span class="de-range-lbl" id="deEffRangeLbl">1 – 10</span></label>
+            <div class="dual-range-wrap">
+              <div class="dual-range-track"><div class="dual-range-fill" id="deEffFill"></div></div>
+              <input type="range" class="dual-thumb" id="deEffMin" min="1" max="10" value="1" step="1" oninput="syncRange('Eff');applyDataEntryFilters()">
+              <input type="range" class="dual-thumb" id="deEffMax" min="1" max="10" value="10" step="1" oninput="syncRange('Eff');applyDataEntryFilters()">
+            </div>
+          </div>
+          <div class="de-fg de-fg-slider">
+            <label class="de-fg-label">Integrity &nbsp;<span class="de-range-lbl" id="deIntgRangeLbl">1 – 10</span></label>
+            <div class="dual-range-wrap">
+              <div class="dual-range-track"><div class="dual-range-fill" id="deIntgFill"></div></div>
+              <input type="range" class="dual-thumb" id="deIntgMin" min="1" max="10" value="1" step="1" oninput="syncRange('Intg');applyDataEntryFilters()">
+              <input type="range" class="dual-thumb" id="deIntgMax" min="1" max="10" value="10" step="1" oninput="syncRange('Intg');applyDataEntryFilters()">
+            </div>
+          </div>
+          <div class="de-fg de-fg-slider">
+            <label class="de-fg-label">Length of Service (Years) &nbsp;<span class="de-range-lbl" id="deSvcRangeLbl">0 – 30+</span></label>
+            <div class="dual-range-wrap">
+              <div class="dual-range-track"><div class="dual-range-fill" id="deSvcFill"></div></div>
+              <input type="range" class="dual-thumb" id="deSvcMin" min="0" max="30" value="0" step="1" oninput="syncRange('Svc');applyDataEntryFilters()">
+              <input type="range" class="dual-thumb" id="deSvcMax" min="0" max="30" value="30" step="1" oninput="syncRange('Svc');applyDataEntryFilters()">
+            </div>
+          </div>
+          <div class="de-fg" style="align-self:flex-end;">
+            <p class="de-range-note">Eff &amp; Intg filters apply only to records with ratings. Service filter applies only to records with a From Date.</p>
+          </div>
         </div>
       </div>
-      <div class="admin-district-select-bar">
-        <label>Select District:</label>
-        <select class="filter-select" id="adminEntryDistrict" onchange="loadAdminEntry()">
-          <option value="">-- Select a District --</option>
-        </select>
-        <button class="btn btn-sm btn-outline" onclick="loadAdminEntry()">Load Data</button>
+
+      <!-- Table -->
+      <div class="table-container">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);">
+          <span id="deTableCount" style="font-size:0.85rem;color:var(--text-muted);">–</span>
+        </div>
+        <div class="table-scroll-wrap">
+          <table class="data-table de-main-table" id="deMainTable">
+            <thead>
+              <tr>
+                <th style="width:42px">Sl</th>
+                <th class="sortable-th" onclick="sortAdminTable('dist')">District <span class="sort-ind" id="asort-dist"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('dept')">Department <span class="sort-ind" id="asort-dept"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('post')">Post <span class="sort-ind" id="asort-post"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('name')">Officer Name <span class="sort-ind" id="asort-name"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('cfms')">CFMS ID <span class="sort-ind" id="asort-cfms"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('contact')">Contact <span class="sort-ind" id="asort-contact"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('from_date')">From Date <span class="sort-ind" id="asort-from_date"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('svc')">Service <span class="sort-ind" id="asort-svc"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('native')">Native <span class="sort-ind" id="asort-native"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('regfac')">Reg/FAC <span class="sort-ind" id="asort-regfac"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('eff')">Eff <span class="sort-ind" id="asort-eff"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('intg')">Intg <span class="sort-ind" id="asort-intg"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('pstatus')">Post Status <span class="sort-ind" id="asort-pstatus"></span></th>
+                <th class="sortable-th" onclick="sortAdminTable('estatus')">Entry Status <span class="sort-ind" id="asort-estatus"></span></th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="deMainTableBody">
+              <tr><td colspan="15" style="text-align:center;padding:40px;color:var(--text-muted);">Loading data…</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <!-- Table will be injected here -->
-      <div id="adminEntryTableArea"></div>
     </section>
 
     <!-- ============ VIEW ALL DATA SECTION ============ -->
@@ -263,21 +478,130 @@
     <section class="page-section" id="sec-eiReport">
       <div class="page-header">
         <div>
-          <h2>Efficiency & Integrity Report</h2>
-          <p>Performance ratings of all officers across districts</p>
+          <h2>Efficiency &amp; Integrity Report</h2>
+          <p>State-wide officer performance ratings – a guide for top management</p>
         </div>
       </div>
-      <div class="charts-grid" style="margin-bottom:24px;">
+
+      <!-- KPI Cards -->
+      <div class="stats-row ei-kpi-row">
+        <div class="stat-card ei-k1">
+          <span class="sc-icon-wrap">👥</span>
+          <div class="sc-val" id="ei-totalRated">–</div>
+          <div class="sc-lbl">Officers Rated</div>
+        </div>
+        <div class="stat-card ei-k2">
+          <span class="sc-icon-wrap">⚡</span>
+          <div class="sc-val" id="ei-avgEff">–</div>
+          <div class="sc-lbl">State Avg Efficiency</div>
+        </div>
+        <div class="stat-card ei-k3">
+          <span class="sc-icon-wrap">🛡️</span>
+          <div class="sc-val" id="ei-avgIntg">–</div>
+          <div class="sc-lbl">State Avg Integrity</div>
+        </div>
+        <div class="stat-card ei-k4">
+          <span class="sc-icon-wrap">⭐</span>
+          <div class="sc-val" id="ei-avgCombined">–</div>
+          <div class="sc-lbl">State Avg Combined</div>
+        </div>
+        <div class="stat-card ei-k5">
+          <span class="sc-icon-wrap">🏆</span>
+          <div class="sc-val" id="ei-pctExcellent">–</div>
+          <div class="sc-lbl">Excellent Officers</div>
+        </div>
+        <div class="stat-card ei-k6">
+          <span class="sc-icon-wrap">⚠️</span>
+          <div class="sc-val" id="ei-pctBelowAvg">–</div>
+          <div class="sc-lbl">Below Average</div>
+        </div>
+      </div>
+
+      <!-- Row 1: Score distributions + Rating donut -->
+      <div class="charts-grid charts-3col" style="margin-bottom:24px;">
         <div class="chart-card">
-          <h4>📊 Score Distribution (Efficiency)</h4>
+          <h4>⚡ Efficiency Score Distribution</h4>
           <div class="chart-wrapper"><canvas id="effDistChart"></canvas></div>
         </div>
         <div class="chart-card">
-          <h4>📊 Score Distribution (Integrity)</h4>
+          <h4>🛡️ Integrity Score Distribution</h4>
           <div class="chart-wrapper"><canvas id="intgDistChart"></canvas></div>
         </div>
+        <div class="chart-card">
+          <h4>🏅 Rating Category Breakdown</h4>
+          <div class="chart-wrapper"><canvas id="ratingDonutChart"></canvas></div>
+        </div>
       </div>
+
+      <!-- Row 2: District-wise + Dept-wise horizontal bars -->
+      <div class="charts-grid" style="margin-bottom:24px;">
+        <div class="chart-card">
+          <h4>🗺️ District-wise Avg Efficiency vs Integrity</h4>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:-10px 0 12px;">Sorted by Avg Efficiency ↓ &nbsp;|&nbsp; Scale: 1–10</p>
+          <div class="chart-wrapper" style="height:480px;"><canvas id="distEIChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>🏢 Department-wise Avg Efficiency vs Integrity</h4>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:-10px 0 12px;">Sorted by Avg Efficiency ↓ &nbsp;|&nbsp; Scale: 1–10</p>
+          <div class="chart-wrapper" style="height:480px;"><canvas id="deptEIChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Department Drill-down -->
+      <div class="chart-card" style="margin-bottom:24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px;">
+          <div>
+            <h4 style="margin-bottom:4px;border-bottom:none;padding-bottom:0;">🔍 Drill-down: District-wise Scores by Department</h4>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin:0;">Select a department to see how each district performs within that department</p>
+          </div>
+          <select class="filter-select" id="eiDrillDeptSelect" onchange="renderEIDrilldown()" style="min-width:240px;">
+            <option value="">— Select Department —</option>
+          </select>
+        </div>
+        <div style="position:relative;">
+          <div id="drilldownPlaceholder" style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--text-muted);font-size:0.9rem;flex-direction:column;gap:8px;">
+            <span style="font-size:2rem;">🔍</span>
+            <span>Select a department above to drill down</span>
+          </div>
+          <div style="display:none;" id="drilldownChartWrap">
+            <div class="chart-wrapper" style="height:340px;"><canvas id="drilldownChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dept × District Heatmap -->
+      <div class="chart-card" style="margin-bottom:24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px;">
+          <div>
+            <h4 style="margin-bottom:4px;border-bottom:none;padding-bottom:0;">🔥 Department × District Performance Heatmap</h4>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin:0;">Avg score for each Department–District combination. Sticky row &amp; column headers. Click a cell for details.</p>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm hm-btn hm-btn-active" id="hmBtnCombined" onclick="switchHeatmap('combined')">Combined</button>
+            <button class="btn btn-sm hm-btn" id="hmBtnEff" onclick="switchHeatmap('eff')">Efficiency</button>
+            <button class="btn btn-sm hm-btn" id="hmBtnIntg" onclick="switchHeatmap('intg')">Integrity</button>
+          </div>
+        </div>
+        <div class="ei-heatmap-legend">
+          <span class="hm-leg hm-na">No Data</span>
+          <span class="hm-leg hm-lo">1–3 &nbsp;Low</span>
+          <span class="hm-leg hm-mid">4–5 &nbsp;Average</span>
+          <span class="hm-leg hm-good">6–7 &nbsp;Good</span>
+          <span class="hm-leg hm-hi">8–10 Excellent</span>
+        </div>
+        <div class="ei-heatmap-wrap">
+          <table class="ei-heatmap-table" id="eiHeatmapTable">
+            <tbody><tr><td style="text-align:center;padding:30px;color:var(--text-muted);">Loading heatmap…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Officers Table -->
       <div class="table-container">
+        <div class="table-toolbar">
+          <h3>📋 All Officers – Rated Details</h3>
+          <span style="font-size:0.8rem;color:var(--text-muted);">Sorted by Avg Score (highest first)</span>
+        </div>
         <div class="table-scroll-wrap">
           <table class="report-table" id="eiTable">
             <thead>
@@ -286,7 +610,7 @@
                 <th>Efficiency</th><th>Integrity</th><th>Avg Score</th><th>Rating</th>
               </tr>
             </thead>
-            <tbody id="eiBody"><tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-muted)">Loading...</td></tr></tbody>
+            <tbody id="eiBody"><tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-muted)">Loading…</td></tr></tbody>
           </table>
         </div>
       </div>

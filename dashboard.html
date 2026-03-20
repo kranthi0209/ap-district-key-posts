@@ -125,18 +125,18 @@
           <table class="data-table" id="dataTable">
             <thead>
               <tr>
-                <th>Sl No</th>
-                <th>Department</th>
-                <th>Name of the Post</th>
-                <th>Name of Officer</th>
-                <th>CFMS ID</th>
-                <th>Contact No</th>
-                <th>Working From Date</th>
-                <th>Native District</th>
-                <th>Regular/FAC</th>
-                <th>Efficiency (1-10)</th>
-                <th>Integrity (1-10)</th>
-                <th>Status</th>
+                <th class="sortable-th" onclick="sortTable('sl')">Sl No <span class="sort-ind" id="sort-sl"></span></th>
+                <th class="sortable-th" onclick="sortTable('dept')">Department <span class="sort-ind" id="sort-dept"></span></th>
+                <th class="sortable-th" onclick="sortTable('post')">Name of the Post <span class="sort-ind" id="sort-post"></span></th>
+                <th class="sortable-th" onclick="sortTable('name')">Name of Officer <span class="sort-ind" id="sort-name"></span></th>
+                <th class="sortable-th" onclick="sortTable('cfms')">CFMS ID <span class="sort-ind" id="sort-cfms"></span></th>
+                <th class="sortable-th" onclick="sortTable('contact')">Contact No <span class="sort-ind" id="sort-contact"></span></th>
+                <th class="sortable-th" onclick="sortTable('from_date')">Working From Date <span class="sort-ind" id="sort-from_date"></span></th>
+                <th class="sortable-th" onclick="sortTable('native')">Native District <span class="sort-ind" id="sort-native"></span></th>
+                <th class="sortable-th" onclick="sortTable('regfac')">Regular/FAC <span class="sort-ind" id="sort-regfac"></span></th>
+                <th class="sortable-th" onclick="sortTable('eff')">Efficiency (1-10) <span class="sort-ind" id="sort-eff"></span></th>
+                <th class="sortable-th" onclick="sortTable('intg')">Integrity (1-10) <span class="sort-ind" id="sort-intg"></span></th>
+                <th class="sortable-th" onclick="sortTable('status')">Status <span class="sort-ind" id="sort-status"></span></th>
                 <th style="min-width:200px;">Actions</th>
               </tr>
             </thead>

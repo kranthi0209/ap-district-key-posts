@@ -8,6 +8,8 @@ let districtPosts = [];
 let rowData = {}; // keyed by post_id, holds all entered data
 let doughnutChart = null;
 let deptBarChart = null;
+let sortCol = null;
+let sortDir = 1; // 1 = asc, -1 = desc
 
 // ============================================================
 // INIT
@@ -84,18 +86,79 @@ async function loadData() {
 }
 
 // ============================================================
+// TABLE SORT
+// ============================================================
+function sortTable(col) {
+  if (sortCol === col) {
+    sortDir *= -1;
+  } else {
+    sortCol = col;
+    sortDir = 1;
+  }
+  renderTable();
+}
+
+function getPostSortValue(post, col) {
+  const saved = rowData[post.post_id] || {};
+  const isVacant = saved.is_vacant === 'true';
+  const isNoPost = saved.is_no_post === 'true';
+  const isGenSaved = saved.general_saved === 'true';
+  const isEISaved = saved.ei_saved === 'true' || isVacant || isNoPost;
+  switch (col) {
+    case 'sl':       return districtPosts.indexOf(post);
+    case 'dept':     return (post.department_name || '').toLowerCase();
+    case 'post':     return (post.post_name || '').toLowerCase();
+    case 'name':     return (saved.officer_name || '').toLowerCase();
+    case 'cfms':     return saved.cfms_id || '';
+    case 'contact':  return saved.contact_no || '';
+    case 'from_date':return saved.from_date || '';
+    case 'native':   return saved.native_dist || '';
+    case 'regfac':   return saved.reg_fac || '';
+    case 'eff':      return parseFloat(saved.efficiency) || -1;
+    case 'intg':     return parseFloat(saved.integrity) || -1;
+    case 'status': {
+      if (isGenSaved && isEISaved) return 0;
+      if (isGenSaved) return 1;
+      if (isVacant) return 2;
+      if (isNoPost) return 3;
+      return 4;
+    }
+    default: return '';
+  }
+}
+
+// ============================================================
 // RENDER TABLE
 // ============================================================
 function renderTable() {
   const tbody = document.getElementById('dataTableBody');
   tbody.innerHTML = '';
 
-  districtPosts.forEach((post, idx) => {
+  // Sort a copy of districtPosts
+  let posts = [...districtPosts];
+  if (sortCol) {
+    posts.sort((a, b) => {
+      const va = getPostSortValue(a, sortCol);
+      const vb = getPostSortValue(b, sortCol);
+      if (va < vb) return -sortDir;
+      if (va > vb) return sortDir;
+      return 0;
+    });
+  }
+
+  // Update sort indicator arrows
+  document.querySelectorAll('.sort-ind').forEach(el => { el.textContent = ''; el.className = 'sort-ind'; });
+  if (sortCol) {
+    const ind = document.getElementById(`sort-${sortCol}`);
+    if (ind) { ind.textContent = sortDir === 1 ? '▲' : '▼'; ind.className = 'sort-ind active'; }
+  }
+
+  posts.forEach((post, idx) => {
     const saved = rowData[post.post_id] || {};
     const isVacant = saved.is_vacant === 'true' || saved.is_vacant === true;
     const isNoPost = saved.is_no_post === 'true' || saved.is_no_post === true;
     const isGeneralSaved = saved.general_saved === 'true' || saved.general_saved === true;
-    const isEISaved = saved.ei_saved === 'true' || saved.ei_saved === true;
+    const isEISaved = saved.ei_saved === 'true' || saved.ei_saved === true || saved.is_vacant === 'true' || saved.is_vacant === true || saved.is_no_post === 'true' || saved.is_no_post === true;
     const isFullySaved = isGeneralSaved && isEISaved;
 
     const tr = document.createElement('tr');
@@ -305,7 +368,7 @@ async function saveGeneral(postId) {
     is_vacant: isVacant ? 'true' : 'false',
     is_no_post: isNoPost ? 'true' : 'false',
     general_saved: 'true',
-    ei_saved: rowData[postId]?.ei_saved || 'false',
+    ei_saved: (isVacant || isNoPost) ? 'true' : (rowData[postId]?.ei_saved || 'false'),
     efficiency: rowData[postId]?.efficiency || '',
     integrity: rowData[postId]?.integrity || '',
     saved_at: new Date().toISOString()
@@ -433,7 +496,7 @@ function updateProgressHeader() {
   districtPosts.forEach(post => {
     const r = rowData[post.post_id];
     if (r && (r.general_saved === 'true' || r.is_vacant === 'true' || r.is_no_post === 'true')) genSaved++;
-    if (r && r.ei_saved === 'true') eiSaved++;
+    if (r && (r.ei_saved === 'true' || r.is_vacant === 'true' || r.is_no_post === 'true')) eiSaved++;
   });
 
   const pending = total - genSaved;
@@ -459,7 +522,7 @@ function renderProgressCharts() {
   districtPosts.forEach(post => {
     const r = rowData[post.post_id];
     if (r && (r.general_saved === 'true' || r.is_vacant === 'true' || r.is_no_post === 'true')) genSaved++;
-    if (r && r.ei_saved === 'true') eiSaved++;
+    if (r && (r.ei_saved === 'true' || r.is_vacant === 'true' || r.is_no_post === 'true')) eiSaved++;
   });
 
   // Doughnut
@@ -518,7 +581,7 @@ function renderDeptProgress() {
     depts[dept].total++;
     const r = rowData[post.post_id];
     if (r && (r.general_saved === 'true' || r.is_vacant === 'true' || r.is_no_post === 'true')) depts[dept].saved++;
-    if (r && r.ei_saved === 'true') depts[dept].eiSaved++;
+    if (r && (r.ei_saved === 'true' || r.is_vacant === 'true' || r.is_no_post === 'true')) depts[dept].eiSaved++;
     depts[dept].posts.push(post);
   });
 
