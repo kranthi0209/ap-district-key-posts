@@ -192,9 +192,20 @@ const POSTS_DATA = [
 { district_id: "D24", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P450", post_name: "Dy.S.P, Dharmavaram" },
 { district_id: "D25", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P451", post_name: "Dy.S.P, Tirupati" },
 { district_id: "D25", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P452", post_name: "Dy.S.P, Srikalahasti" },
-{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P453", post_name: "Dy.S.P, Bheemunipatnam" },
-{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P454", post_name: "Dy.S.P, Gajuwaka" },
-{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P455", post_name: "Dy.S.P, Pendurthi" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P500", post_name: "Commissioner of Police" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P501", post_name: "ADCP Admin" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P502", post_name: "ADCP Traffic" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P503", post_name: "ADCP CAR" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P504", post_name: "ADCP SB" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P505", post_name: "ACP, Zone-North" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P506", post_name: "ACP, Zone-Dwaraka" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P507", post_name: "ACP, Zone-East" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P508", post_name: "ACP, Zone-West" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P509", post_name: "ACP, Zone-South" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P510", post_name: "ACP, Zone-Harbour" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P511", post_name: "ACP, Crime" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P512", post_name: "ACP, Traffic" },
+{ district_id: "D26", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P513", post_name: "ACP, Spl Branch" },
 { district_id: "D27", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P456", post_name: "Dy.S.P, Vizianagaram" },
 { district_id: "D27", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P457", post_name: "Dy.S.P, Bobbili" },
 { district_id: "D27", dept_id: "DEP02", department_name: "Home (Law & Order)", post_id: "P458", post_name: "Dy.S.P, Cheepurupalli" },
@@ -364,7 +375,8 @@ const POSTS_DATA = [
 { district_id: "D25", dept_id: "DEP11", department_name: "Municipal Administration", post_id: "P376" , post_name: "Municipal Commissioner, Venkatagiri Municipality "},
 { district_id: "D25", dept_id: "DEP11", department_name: "Municipal Administration", post_id: "P377" , post_name: "Vice Chairman, Tirupati Urban Development Authority "},
 { district_id: "D26", dept_id: "DEP11", department_name: "Municipal Administration", post_id: "P378" , post_name: "Municipal Commissioner, Greater Visakhapatnam Municipal Corporation "},
-{ district_id: "D26", dept_id: "DEP11", department_name: "Municipal Administration", post_id: "P379" , post_name: "Vice Chairman, Visakhapatnam Urban Development Authority "},
+{ district_id: "D26", dept_id: "DEP11", department_name: "Municipal Administration", post_id: "P601" , post_name: "Metropolitan Commissioner, Visakhapatnam Urban Development Authority "},
+{ district_id: "D26", dept_id: "DEP11", department_name: "Municipal Administration", post_id: "P602" , post_name: "Project Director, UCD "},
 { district_id: "D27", dept_id: "DEP11", department_name: "Municipal Administration", post_id: "P380" , post_name: "Municipal Commissioner, Bobbili Municipality "},
 { district_id: "D27", dept_id: "DEP11", department_name: "Municipal Administration", post_id: "P381" , post_name: "Municipal Commissioner, Nellimarla Municipality "},
 { district_id: "D27", dept_id: "DEP11", department_name: "Municipal Administration", post_id: "P382" , post_name: "Municipal Commissioner, Vijayanagaram Municipality "},
@@ -391,6 +403,8 @@ const POSTS_DATA = [
 { district_id: "ALL", dept_id: "DEP12", department_name: "Other Departments", post_id: "P162", post_name: "Project Director Housing" },
 { district_id: "ALL", dept_id: "DEP12", department_name: "Other Departments", post_id: "P163", post_name: "Project Director, AP Micro Irrigation Project" },
 { district_id: "ALL", dept_id: "DEP13", department_name: "Revenue Generating Depts", post_id: "P164", post_name: "AC/DC Commercial Taxes" },
+{ district_id: "D26", dept_id: "DEP13", department_name: "Revenue Generating Depts", post_id: "P515", post_name: "Joint Commissioner(ST)-1" },
+{ district_id: "D26", dept_id: "DEP13", department_name: "Revenue Generating Depts", post_id: "P516", post_name: "Joint Commissioner(ST)-2" },
 { district_id: "ALL", dept_id: "DEP13", department_name: "Revenue Generating Depts", post_id: "P165", post_name: "DD/AD Mines" },
 { district_id: "ALL", dept_id: "DEP13", department_name: "Revenue Generating Depts", post_id: "P166", post_name: "District Prohibition & Excise Officer" },
 { district_id: "ALL", dept_id: "DEP13", department_name: "Revenue Generating Depts", post_id: "P167", post_name: "District Registrar" },
@@ -468,16 +482,37 @@ function hideLoadingPopup() {
   if (overlay) overlay.style.display = "none";
 }
 
+// ============================================================
+// CACHE (sessionStorage, 20-minute TTL)
+// ============================================================
+const ADMIN_CACHE_KEY = 'apop_admin_v1';
+const ADMIN_CACHE_TTL = 20 * 60 * 1000; // 20 minutes
+
+function getAdminCache() {
+  try {
+    const raw = sessionStorage.getItem(ADMIN_CACHE_KEY);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > ADMIN_CACHE_TTL) { sessionStorage.removeItem(ADMIN_CACHE_KEY); return null; }
+    return data; // { districtId: [rows], ... }
+  } catch { return null; }
+}
+
+function setAdminCache(data) {
+  try { sessionStorage.setItem(ADMIN_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); }
+  catch { /* storage full — skip caching */ }
+}
+
+function clearAdminCache() {
+  try { sessionStorage.removeItem(ADMIN_CACHE_KEY); } catch {}
+}
+
+// ============================================================
+// SHEET API CALLS
+// ============================================================
 async function saveRowToSheet(sheetName, rowData) {
-  const payload = {
-    action: "saveRow",
-    sheet: sheetName,
-    data: rowData
-  };
-  const resp = await fetch(APPS_SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  });
+  const payload = { action: "saveRow", sheet: sheetName, data: rowData };
+  const resp = await fetch(APPS_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
   return resp.json();
 }
 
@@ -487,19 +522,55 @@ async function getSheetData(sheetName) {
   return resp.json();
 }
 
-async function getAllDistrictsSummary() {
-  const url = `${APPS_SCRIPT_URL}?action=getSummary`;
+// Single-request: fetch ALL districts at once (requires Apps Script to support action=getAllData)
+// Apps Script should return: { "USER01": [...rows], "USER02": [...rows], ... }
+// Add this case to your Apps Script doGet():
+//   case 'getAllData': {
+//     var ss = SpreadsheetApp.getActiveSpreadsheet();
+//     var result = {};
+//     var sheets = ss.getSheets();
+//     sheets.forEach(function(sheet) {
+//       var name = sheet.getName();
+//       var values = sheet.getDataRange().getValues();
+//       if (values.length < 2) return;
+//       var headers = values[0];
+//       result[name] = values.slice(1).filter(function(r){ return r[0]; }).map(function(r){
+//         var obj = {}; headers.forEach(function(h,i){ obj[h] = r[i] !== undefined ? String(r[i]) : ''; }); return obj;
+//       });
+//     });
+//     return ContentService.createTextOutput(JSON.stringify(result))
+//       .setMimeType(ContentService.MimeType.JSON);
+//   }
+async function fetchAllDistrictsAtOnce() {
+  const url = `${APPS_SCRIPT_URL}?action=getAllData`;
   const resp = await fetch(url);
-  return resp.json();
+  if (!resp.ok) throw new Error('getAllData HTTP ' + resp.status);
+  const json = await resp.json();
+  if (!json || typeof json !== 'object' || Array.isArray(json)) throw new Error('Unexpected getAllData format');
+  return json; // { sheetName: [...rows] }
 }
 
-// Parallel fetch for all districts (Admin dashboard)
-async function fetchAllDistrictsParallel() {
-  const promises = DISTRICTS_DATA.map(d => {
-    const url = `${APPS_SCRIPT_URL}?action=getSheet&sheet=${encodeURIComponent(d.user_id || d.district_id)}`;
-    return fetch(url).then(r => r.json()).then(data => ({ districtId: d.district_id, data })).catch(() => ({ districtId: d.district_id, data: [] }));
-  });
-  return Promise.all(promises);
+// Batched parallel fetch — BATCH_SIZE at a time to avoid overwhelming Apps Script
+async function fetchAllDistrictsBatched(onProgress, batchSize = 5) {
+  const cacheData = {};
+  const batches = [];
+  for (let i = 0; i < DISTRICTS_DATA.length; i += batchSize)
+    batches.push(DISTRICTS_DATA.slice(i, i + batchSize));
+
+  let loaded = 0;
+  for (const batch of batches) {
+    await Promise.all(batch.map(async d => {
+      const cred = CREDENTIALS_DATA.find(c => c.district_id === d.district_id);
+      const sheetName = cred ? cred.user_id : d.district_id;
+      try {
+        const result = await getSheetData(sheetName);
+        cacheData[d.district_id] = Array.isArray(result) ? result : (result?.data || []);
+      } catch { cacheData[d.district_id] = []; }
+      loaded++;
+      if (onProgress) onProgress(loaded, DISTRICTS_DATA.length);
+    }));
+  }
+  return cacheData; // { districtId: [...rows] }
 }
 
 // ============================================================
